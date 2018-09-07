@@ -1,0 +1,11 @@
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/public/uploads/
+/var/
+/vendor/
+/nbproject/
+/web/
+###< symfony/framework-bundle ###
+
+/nbproject/private/
