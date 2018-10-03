@@ -1,24 +1,55 @@
-security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+security:          
+    encoders:
+        App\Entity\Person\Admin: bcrypt
+        App\Entity\Person\User:  bcrypt
+            
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN]
+        
     providers:
-        in_memory: { memory: ~ }
+        chain_provider:
+            chain:
+                providers: [admin, user]
+        admin:
+            entity: { class: App\Entity\Person\Admin, property: email }
+        user:
+            entity: { class: App\Entity\Person\User, property: email }
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            anonymous: true
-
-            # activate different ways to authenticate
-
-            # http_basic: true
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
-            # https://symfony.com/doc/current/security/form_login_setup.html
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+            context: my_context
+          
+        admin_secured_area:
+            pattern:   ^/admin
+            anonymous: ~
+            provider: admin
+            form_login:
+                login_path: /admin/login
+                check_path: /admin/login
+                default_target_path: /admin/users
+            logout:
+                path:   /logout
+                target: /
+            context: my_context
+            
+        user_secured_area:
+            pattern:   ^/
+            anonymous: ~
+            provider: user
+            form_login:
+                login_path: /login
+                check_path: /login
+                default_target_path: /  
+            logout:
+                path:   /logout
+                target: / 
+            context: my_context
+    
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY,  ip: 127.0.0.1 }
+        - { path: ^/admin/users, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Category list page!</h1>
+    
+{#    Six levels of nesting  #}
+    {% for category in categories %}
+        {% if category.parent is null %}
+            <ul>
+                <a href="{{ path('category', { 'slug': category.slug }) }}">{{ category.name }}</a>
+                {% if category.kids is not null %}
+                    {% for kid in category.kids %}
+                        <ul>
+                            >&nbsp;
+                            <a href="{{ path('category', { 'slug': kid.slug }) }}">{{ kid.name }}</a>
+                            {% if kid.kids is not null %}
+                                {% for kid in kid.kids %}
+                                    <ul>
+                                        >&nbsp;
+                                        <a href="{{ path('category', { 'slug': kid.slug }) }}">{{ kid.name }}</a>
+                                        {% if kid.kids is not null %}
+                                            {% for kid in kid.kids %}
+                                                <ul>
+                                                    >&nbsp;
+                                                    <a href="{{ path('category', { 'slug': kid.slug }) }}">{{ kid.name }}</a>
+                                                    {% if kid.kids is not null %}
+                                                        {% for kid in kid.kids %}
+                                                            <ul>
+                                                                >&nbsp;
+                                                                <a href="{{ path('category', { 'slug': kid.slug }) }}">{{ kid.name }}</a>
+                                                                {% if kid.kids is not null %}
+                                                                    {% for kid in kid.kids %}
+                                                                        <ul>
+                                                                            >&nbsp;
+                                                                            <a href="{{ path('category', { 'slug': kid.slug }) }}">{{ kid.name }}</a>
+                                                                        </ul>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </ul>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </ul>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
