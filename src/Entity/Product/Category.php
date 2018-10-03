@@ -29,17 +29,17 @@ class Category
     private $name;
     
     /**
-     * @ORM\Column(type="string", length=35, unique=true)
+     * @ORM\Column(type="string", length=45, unique=true)
      */
     private $slug;
     
     /**
-     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="\App\Entity\Product\Category", mappedBy="parent")
      */
     private $kids;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="kids")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Product\Category", inversedBy="kids")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parent;
