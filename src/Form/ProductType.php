@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use \Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProductType extends AbstractType
 {
@@ -18,20 +19,17 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('nameUrl')
-            ->add('description')
+            ->add('description', TextareaType::class)
             ->add('price')
-            ->add('productQuantity')
-            ->add('picture', FileType::class, array('label' => 'Please select picture'))
+            ->add('quantity')
+            ->add('images', FileType::class, array('label' => 'Please select picture'))
             ->add('category')
         ;
         
         $builder
             ->add('images', CollectionType::class, array(
                 'entry_type' => Image::class,
-                'entry_option' => array(
-                    'label' => false
-                )
+                'entry_options' => array('label' => false)
         ));
     }
     
@@ -41,7 +39,7 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Product'
+            'data_class' => 'App\Entity\Product\Product'
         ));
     }
 
@@ -50,7 +48,7 @@ class ProductType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_product';
+        return 'app_product';
     }
 
 

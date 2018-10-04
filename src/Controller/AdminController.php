@@ -121,7 +121,7 @@ class AdminController extends AbstractController
      * @Route("/product/new", name="product_new")
      * @Method({"GET", "POST"})
      */
-    public function newProductAction(Request $request, FileUploader $fileUploader)
+    public function newProductAction(Request $request, FileUploader $fileUploader, Slugger $slugger)
     {
         $product = new Product();
         $form = $this->createForm('App\Form\ProductType', $product);
@@ -129,11 +129,13 @@ class AdminController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            $picture = $product->getPicture();
+            //$picture = $product->getPicture();
             
-            $pictureName = $fileUploader->upload($picture);
+            //$pictureName = $fileUploader->upload($picture);
             
-            $product->setPicture($pictureName);
+            //$product->setPicture($pictureName);
+            
+            $product->setSlug(Slugger::slugify($product->getName()));
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
