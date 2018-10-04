@@ -2,39 +2,36 @@
 
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader {
     
-    private $targetDir;
+    private $targetDirectory;
     
-    public function __construct($targetDir) {
+    public function __construct($targetDirectory) {
         
-        $this->targetDir = $targetDir;
+        $this->targetDirectory = $targetDirectory;
     }
     
     public function upload(UploadedFile $file) {
         
-        $fileName = $this->generateUniquePictureName().'.'.$file->guessExtension();
+        $fileName = md5(uniqid()).'.'.$file->guessExtension();
         
-        $file->move(
-            $this->getTargetDir(),
-            $fileName
-        );
+        try{
+            
+            $file->move($this->getTargetDirectory(), $fileName);
+            
+        } catch (FileException $e) {
+            
+            
+        }
         
         return $fileName;
     }
     
-    public function getTargetDir() {
+    public function getTargetDirectory() {
         
-        return $this->targetDir;
-    }
-    
-    /**
-     * @return string
-     */
-    private function generateUniquePictureName() {
-        
-        return md5(uniqid());
+        return $this->targetDirectory;
     }
 }
