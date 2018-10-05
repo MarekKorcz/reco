@@ -2,30 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\Product\Category;
+use App\Entity\Product\Image;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use App\Form\EventListener\AddParentFieldSubscriber;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-class CategoryType extends AbstractType
+class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {        
         $builder
-            ->add('name', TextType::class)
-            ->add('submit', SubmitType::class)
+            ->add('imageName', TextType::class)
+            ->add('imageFile', FileType::class)
         ;
-        
-        $builder->addEventSubscriber(new AddParentFieldSubscriber());
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Category::class,
+            'data_class' => Image::class
         ));
     }
 }

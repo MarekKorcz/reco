@@ -5,7 +5,7 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileUploader {
+class FileUploader extends UploadedFile {
     
     private $targetDirectory;
     

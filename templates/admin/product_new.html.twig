@@ -1,16 +1,122 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Product creation</h1>
+    <div class="container">
+        <h1>Product creation</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.price) }}
+            {{ form_row(form.quantity) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('admin_product_list') }}">Back to the product list</a>
-        </li>
-    </ul>
+            <ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+                {% for image in form.images %}
+                    <li>
+                        {{ form_row(image.imageName) }} 
+                        {{ form_row(image.imageFile) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {{ form_row(form.category) }}
+            {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+
+        <ul>
+            <li>
+                <a href="{{ path('admin_product_list') }}">Back to the product list</a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
+
+{% block javascripts %}
+    
+    {#    REMOVE IT LATER!!!!! #}
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+    
+    <script>
+            
+        let $collectionHolder;
+
+        // setup an "add a tag" link
+        let $addImageButton = $('<button type="button" class="add_image_link">Add image</button>');
+        let $newLinkLi = $('<li></li>').append($addImageButton);
+
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.images');
+
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addImageButton.on('click', function(e) {
+                // add a new tag form (see next code block)
+                addImageForm($collectionHolder, $newLinkLi);
+            });
+            
+            // add a delete link to all of the existing image form li elements
+            $collectionHolder.find('li').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+            
+            
+            function addImageForm($collectionHolder, $newLinkLi) {
+                // Get the data-prototype explained earlier
+                let prototype = $collectionHolder.data('prototype');
+
+                // get the new index
+                let index = $collectionHolder.data('index');
+
+                let newForm = prototype;
+                // You need this only if you didn't set 'label' => false in your images field in ProductType
+                // Replace '__name__label__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                // newForm = newForm.replace(/__name__label__/g, index);
+
+                // Replace '__name__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                newForm = newForm.replace(/__name__/g, index);
+
+                // increase the index with one for the next item
+                $collectionHolder.data('index', index + 1);
+
+                // Display the form in the page in an li, before the "Add image" link li
+                let $newFormLi = $('<li></li>').append(newForm);
+                $newLinkLi.before($newFormLi);
+                
+                // add a delete link to the new form
+                addImageFormDeleteLink($newFormLi);
+            }
+            
+            function addImageFormDeleteLink($imageFormLi) {
+                var $removeFormButton = $('<button type="button">Delete this image</button>');
+                $imageFormLi.append($removeFormButton);
+
+                $removeFormButton.on('click', function(e) {
+                    // remove the li for the image form
+                    $imageFormLi.remove();
+                });
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    
+    <style>
+        
+    </style>    
+{% endblock %}
+

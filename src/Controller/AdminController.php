@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product\Category;
 use App\Entity\Product\Product;
+use App\Entity\Product\Image;
 use App\Form\CategoryType;
 use App\Utils\Slugger;
 use App\Service\FileUploader;
@@ -124,16 +125,39 @@ class AdminController extends AbstractController
     public function newProductAction(Request $request, FileUploader $fileUploader, Slugger $slugger)
     {
         $product = new Product();
+        
+//        print "<pre>";
+//
+//        print_r($product);
+//
+//        print "</pre>";
+        
         $form = $this->createForm('App\Form\ProductType', $product);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            //$picture = $product->getPicture();
+            $images = $product->getImages();
             
-            //$pictureName = $fileUploader->upload($picture);
+            /*
+             * https://stackoverflow.com/questions/43104128/symfony-3-expected-doctrine-common-collections-arraycollection-given-when?rq=1
+             * 
+             * $form->get('busVehiclesAmenities')->getData()->map(
+                function ($amenities) use ($em, $bus) {
+
+                    $bus->setBusVehiclesAmenities($amenities);
+                    $em->persist($amenities);
+                }
+            );*/
             
-            //$product->setPicture($pictureName);
+            foreach ($images as $image) {
+                
+                $fileName = $fileUploader->upload($image->getImageName());
+
+                $product->setImages($fileName);
+                
+                // maybe add some $em->persist($image);  later ??
+            }
             
             $product->setSlug(Slugger::slugify($product->getName()));
             

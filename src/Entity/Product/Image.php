@@ -3,6 +3,7 @@
 namespace App\Entity\Product;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Image
@@ -22,9 +23,21 @@ class Image
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=45, unique=true)
+     * @ORM\Column(type="string", length=50)
+     * @var string
      */
-    private $slug;
+    private $imageName;
+    
+    /**
+     * @var File
+     */
+    private $imageFile;
+    
+    /**
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    private $updatedAt;
     
     /**
      * @ORM\ManyToOne(targetEntity="\App\Entity\Product\Product", inversedBy="images")
@@ -32,7 +45,18 @@ class Image
      */
     private $product;
 
+    
 
+//    public function __construct() {
+//        
+//        $this->product = new \Doctrine\Common\Collections\ArrayCollection();
+//    }
+
+        public function __toString() 
+    {
+        return $this->getImageName();
+    }
+    
     /**
      * Get id
      *
@@ -43,27 +67,65 @@ class Image
         return $this->id;
     }
 
-    public function setSlug($slug)
+    public function setImageName($imageName)
     {
-        $this->slug = $slug;
+        $this->imageName = $imageName;
+    }
+    
+    public function getImageName()
+    {
+        return $this->imageName;
+    }
+    
+    public function setImageFile(UploadedFile $image = null)
+    {
+        $this->imageFile = $image;
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            
+            $this->setUpdatedAt();
+        }
+    }
+    
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+    
+    public function setUpdatedAt() 
+    {        
+        $this->updatedAt = new \DateTime('now');
         
         return $this;
     }
-
-    public function getSlug()
-    {
-        return $this->slug;
+    
+    public function getUpdatedAt() 
+    {        
+        return $this->updatedAt;
     }
     
-    public function setProduct($product) {
+    /**
+     * Set product
+     * 
+     * @param \App\Entity\Product\Product $product
+     * @return Image
+     */
+    public function setProduct(\App\Entity\Product\Product $product = null) {
         
         $this->product = $product;
         
         return $this;
     }
     
+    /**
+     * Get product
+     * 
+     * @return \App\Entity\Product\Product
+     */
     public function getProduct(){
         
         return $this->product;
-    }
+    }  
 }

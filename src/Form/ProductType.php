@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\Image;
+use App\Entity\Product\Product;
+use App\Form\ImageType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use \Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProductType extends AbstractType
 {
@@ -22,15 +23,22 @@ class ProductType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('price')
             ->add('quantity')
-            ->add('images', FileType::class, array('label' => 'Please select picture'))
-            ->add('category')
-        ;
-        
-        $builder
             ->add('images', CollectionType::class, array(
-                'entry_type' => Image::class,
-                'entry_options' => array('label' => false)
-        ));
+                'entry_type' => ImageType::class,
+                'entry_options' => array(
+                    'label' => false
+                ),
+                'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true
+            )) 
+            ->add('category')
+            ->add('submit', SubmitType::class, array(
+                'attr' => array(
+                    'class' => 'btn btn-success'
+                )
+            ))
+        ;
     }
     
     /**
@@ -39,17 +47,7 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Product\Product'
+            'data_class' => Product::class
         ));
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'app_product';
-    }
-
-
 }

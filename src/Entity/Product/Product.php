@@ -61,7 +61,7 @@ class Product
     private $category;
     
     /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="product", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Entity\Product\Image", mappedBy="product", cascade={"persist"})
      */
     private $images;
     
@@ -69,6 +69,11 @@ class Product
     public function __construct() 
     {
         $this->images = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    public function __toString()
+    {        
+        return $this->getName();
     }
 
     /**
@@ -208,31 +213,163 @@ class Product
         return $this->category;
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+//    /**
+//     * Add images into images collection
+//     * 
+//     * @param \App\Entity\Product\Image $image
+//     * @return $this
+//     */
+//    public function setImages(\App\Entity\Product\Image $image = null)
+//    {        
+//        $image->setProduct($this);
+//        $this->images[] = $image;
+//        
+//        return $this;
+//    }
+//    
+//    /**
+//     * Add image
+//     * 
+//     * @param \App\Entity\Product\Image $image
+//     * @return $this
+//     */
+//    public function addImages(\App\Entity\Product\Image $image)
+//    {
+//        $this->images[] = $image;
+//        
+//        return $this;
+//    }
+//    
+//    /**
+//     * Remove image
+//     * 
+//     * @param \App\Entity\Product\Image $image
+//     */
+//    public function removeImages(\App\Entity\Product\Image $image)
+//    {
+//        $this->images->removeElement($image);
+//    }
+//    
+//    /**
+//     * Get images
+//     * 
+//     * @return \Doctrine\Common\Collections\ArrayCollection
+//     */
+//    public function getImages()
+//    {    
+//        return $this->images;
+//    }
+    
+    
+
+    
+    
+    
+//    /**
+//     * Get images
+//     * 
+//     * @return \Doctrine\Common\Collections\ArrayCollection
+//     */
+//    public function getImages()
+//    {    
+//        return $this->images;
+//    }
+    
+
+    
+    
+//    public function addImages(\App\Entity\Product\Image $image)
+//    {
+//        if (!$this->images->contains($image)) {
+//            $this->images->add($image);
+//        }
+//    }
+//    
+//    public function removeImages(\App\Entity\Product\Image $image)
+//    {
+//        $this->images->removeElement($image);
+//    }
+    
+    
+
+    
+//    public function addImages(\App\Entity\Product\Image $image)
+//    {
+//        $image->setProduct($this);
+//
+//        $this->images->add($image);
+//    }
+//    
+//    public function removeImages(\App\Entity\Product\Image $image)
+//    {
+//        $this->images->removeElement($image);
+//    }
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
     /**
      * Add images into images collection
-     *   
-     * @param \AppBundle\Entity\Image $image
-     * @return \AppBundle\Entity\Product 
+     * 
+     * @param \App\Entity\Product\Image $image
+     * @return $this
      */
-    public function setImages(\AppBundle\Entity\Image $image)
-    {
+    public function setImages(\App\Entity\Product\Image $image = null)
+    {        
         $image->setProduct($this);
         $this->images[] = $image;
+
+        return $this;
+    }
+    
+    /**
+     * Add image
+     *
+     * @param \App\Entity\Product\Image $image
+     *
+     * @return Product
+     */
+    public function addImages(\App\Entity\Product\Image $image)
+    {
+        $this->images[] = $image;
+        $image->setProduct($this);
         
         return $this;
     }
+    
     /**
-     * Get images
-     * 
-     * @return \AppBundle\Entity\Image
+     * Remove image
+     *
+     * @param \App\Entity\Product\Image $image
      */
-    public function getImages()
-    {    
-        return $this->images;
+    public function removeImages(\App\Entity\Product\Image $image)
+    {
+        $this->images->removeElement($exp);
     }
     
-    public function __toString()
-    {        
-        return $this->getName();
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 }
